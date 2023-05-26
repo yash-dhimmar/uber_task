@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "tristate123",
+    "database": "yashd_uber",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "tristate123",
+    "database": "yashd_uber",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "tristate123",
+    "database": "leva",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
