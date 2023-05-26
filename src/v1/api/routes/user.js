@@ -21,6 +21,11 @@ router.post('/accepted-trip',UserController.acceptedTrip)
 
 router.post('/rejected-trip',UserController.rejectedTrip)
 
+router.post('/start-ride',UserController.startride)
+
+router.post('/completed-trip',UserController.completedtrip)
+
+
 //router.post('/sign-up', GlobalAuthClass.initialAuthenticate,UserController.signup);
 
 // // sign in api

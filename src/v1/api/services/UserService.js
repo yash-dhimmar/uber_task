@@ -70,7 +70,7 @@ class UserService {
     }
   }
 
-  async ridenow(req,user_id) {
+  async ridenow(req, user_id) {
     try {
       return new Promise(async (resolve, reject) => {
         let { firstName, email } = req.body
@@ -80,9 +80,10 @@ class UserService {
           where: {
             firstName: firstName,
             email: email,
-            user_id:user_id
+            user_id: user_id
           }
         })
+
         var pickup = await pickuplocation.create(req.body.pickuplocation);
         console.log("data=========>", pickup)
         await droplocation.create(req.body.droplocation);
@@ -107,7 +108,6 @@ class UserService {
       return reject(error)
     }
   }
-
   async goonline(req, res) {
     try {
       return new Promise(async (resolve, reject) => {
@@ -138,7 +138,6 @@ class UserService {
       return reject(eerror)
     }
   }
-
   async getnearesttrip(req) {
     try {
       return new Promise(async (resolve, reject) => {
@@ -151,7 +150,6 @@ class UserService {
       return reject(error)
     }
   }
-
   async acceptedTrip(req) {
     try {
       return new Promise(async (resolve, reject) => {
@@ -159,7 +157,7 @@ class UserService {
 
         const tripDetails = await Trip.findOne({ where: { driver_id: driver_id } });
         if (!tripDetails) {
-          var err = {message:"no trips is vailable "}
+          var err = { message: "no trips is vailable " }
           reject(err)
         }
         console.log(tripDetails);
@@ -179,7 +177,6 @@ class UserService {
       return reject(error)
     }
   }
-
   async rejectedTrip(req) {
     try {
       return new Promise(async (resolve, reject) => {
@@ -196,7 +193,57 @@ class UserService {
     } catch (error) {
       return reject(error)
     }
-  }       
+  }
+
+  async startride(req) {
+    try {
+      return new Promise(async (resolve, reject) => {
+        const { driver_id } = req.body;
+
+        const tripDetails = await Trip.findOne({ where: { driver_id: driver_id } });
+        if (!tripDetails) {
+          var err = { message: "no trips is vailable " }
+          reject(err)
+        }
+        console.log("tripDetails===========>", tripDetails);
+
+        const calculatedropTime = () => {
+          return Math.random() * (240 - 10) + 10;
+        };
+        tripDetails.setDataValue('tripStatus', 'Trip Started');
+        tripDetails.setDataValue('estimatedroplocationtime', calculatedropTime());
+
+        await tripDetails.save();
+        resolve(tripDetails[0])
+
+      })
+    } catch (error) {
+      return reject(error)
+    }
+  }
+
+  async completedtrip(req) {
+    try {
+      return new Promise(async (resolve, reject) => {
+        let { driver_id } = req.body;
+        var tripDetails = await Trip.findOne({ where: { driver_id: driver_id } })
+        if (!tripDetails) {
+          var err = { message: "no trip is availabe for this driver" }
+          reject(err)
+        }
+        console.log("tripdetails===========>", tripDetails)
+
+        tripDetails.setDataValue('tripStatus', 'Trip Completed');
+
+        await tripDetails.save();
+       return  resolve()
+      })
+    } catch (error) {
+      return reject(error)
+    }
+  }
+
+
 
 
 

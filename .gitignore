@@ -40,3 +40,5 @@ package-lock.json
 
 # Optional notification log file
 public/notification.txt
+
+yash.js

@@ -95,6 +95,25 @@ class UserController {
 		}
 	}
 
+	async startride(req,res){
+		try{
+			var data = await UserService.startride(req)
+			return responseHelper.success(data,'ride started',res)
+		}catch(error){
+			console.log("error============>",error)
+			return responseHelper.error(error,res)
+		}
+	}
+
+	async completedtrip(req,res){
+		try{
+			var data = await UserService.completedtrip(req)
+			return responseHelper.success|(data,'trip completed successfully',res)
+		}catch(error){
+			return responseHelper.error(error,res)
+		}
+	}
+
 
 
 
