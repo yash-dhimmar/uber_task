@@ -5,6 +5,7 @@ const path = require('path')
 
 const GlobalAuthClass = require('../../../modules/middleware/auth');
 const UserController = require('../../api/controllers/UserController');
+const StripeController = require('../../api/controllers/StripeController')
 
 
 router.post('/sign-up',UserController.signup)
@@ -25,6 +26,11 @@ router.post('/start-ride',UserController.startride)
 
 router.post('/completed-trip',UserController.completedtrip)
 
+router.post('/create-customer',StripeController.createcustomer)
+router.post('/add-card-details',StripeController.addcard)
+router.post('/create-charges',StripeController.createcharges)
+router.post('/retrieve-customer',StripeController.retrievecustomer)
+router.post('/customer-list',StripeController.customerlist)
 
 //router.post('/sign-up', GlobalAuthClass.initialAuthenticate,UserController.signup);
 
