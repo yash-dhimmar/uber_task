@@ -26,32 +26,11 @@ router.post('/start-ride',UserController.startride)
 
 router.post('/completed-trip',UserController.completedtrip)
 
-router.post('/create-customer',StripeController.createcustomer)
-router.post('/add-card-details',StripeController.addcard)
-router.post('/create-charges',StripeController.createcharges)
+router.post('/create-customer',GlobalAuthClass.authenticate,StripeController.createcustomer)
+router.post('/add-card-details',GlobalAuthClass.authenticate,StripeController.addcard)
+router.post('/create-charges',GlobalAuthClass.authenticate,StripeController.createcharges)
 router.post('/retrieve-customer',StripeController.retrievecustomer)
 router.post('/customer-list',StripeController.customerlist)
 
-//router.post('/sign-up', GlobalAuthClass.initialAuthenticate,UserController.signup);
-
-// // sign in api
-// router.post('/sign-in', GlobalAuthClass.initialAuthenticate,UserController.signin);
-
-// // logout api
-// router.post('/sign-out', GlobalAuthClass.passportAuthenticate,UserController.logout)
-
-// // detail api
-// router.post('/detail', GlobalAuthClass.passportAuthenticate,UserController.detail)
-
-// // verify email
-// router.get('/verify-email/:uuid', UserController.verifyMail);
-
-// // refresh token
-// router.post('/refresh-token',UserController.refreshToken)
-// // forgot password
-// router.post('/forgot-password',GlobalAuthClass.initialAuthenticate,UserController.forgotPassword)
-
-// // change password  
-// router.post('/change-password',GlobalAuthClass.passportAuthenticate,UserController.changePassword)
 
 module.exports = router;

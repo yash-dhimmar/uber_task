@@ -1,39 +1,61 @@
 const { reject } = require('bluebird');
-
+const { User, Add_card, Charge, Driver, sequelize, pickuplocation, droplocation, Trip } = require('../../../data/models/index')
 const { STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY } = process.env;
 const stripe = require('stripe')(STRIPE_SECRET_KEY)
 
 class StripeService {
 
-  async createcustomer(req) {
+  async createcustomer(body, firstName, lastName, email, user_id) {
     return new Promise(async (resolve, reject) => {
       try {
-        var customer = await stripe.customers.create({
-          name: req.body.name,
-          email: req.body.email
+        var data = await User.findOne({
+          user_id: user_id
         })
+        if (data) {
+          var customer = await stripe.customers.create({
+            name: firstName.concat(lastName),
+            email: email
+          })
+        }
         resolve(customer)
       } catch (error) {
         return reject(error)
       }
     })
   }
-  async addcard(body) {
+  async addcard(body, user_id) {
     return new Promise(async (resolve, reject) => {
       try {
-        let { customer_id, card_Name, card_ExpYear, card_ExpMonth, card_Number, card_CVC } = body
-        var card_token = await stripe.tokens.create({
-          card:
-          {
-            name: card_Name,
-            number: card_Number,
-            exp_year: card_ExpYear,
-            exp_month: card_ExpMonth,
-            cvc: card_CVC
-          }
+        let { user_stripe_id, card_Name, card_ExpYear, card_ExpMonth, card_Number, card_CVC } = body
+        var data = await User.findOne({
+          user_id: user_id
         })
-        var card = await stripe.customers.createSource(customer_id, {
+        if (data) {
+          var card_token = await stripe.tokens.create({
+            card:
+            {
+              name: card_Name,
+              number: card_Number,
+              exp_year: card_ExpYear,
+              exp_month: card_ExpMonth,
+              cvc: card_CVC
+            }
+          })
+        }
+        var card = await stripe.customers.createSource(user_stripe_id, {
           source: `${card_token.id}`
+        })
+        console.log("card=========>", card_token.id)
+        await Add_card.create({
+          card_Name: card_Name,
+          card_Number: card_Number,
+          card_ExpYear: card_ExpYear,
+          card_ExpMonth: card_ExpMonth,
+          card_CVC: card_CVC,
+          user_stripe_id: user_stripe_id,
+          card_id: card.id,
+          user_id: user_id,
+          source: card_token.id
         })
         resolve({ card: card.id })
       } catch (error) {
@@ -41,17 +63,29 @@ class StripeService {
       }
     })
   }
-  async createcharges(body) {
+  async createcharges(body, user_id) {
     return new Promise(async (resolve, reject) => {
       try {
-        let { customer_id, card_id, amount } = body
-        var charges = await stripe.charges.create({
-          card: card_id,
-          customer: customer_id,
-          amount: amount,
-          currency: "INR"
+        let { user_stripe_id, card_id, amount } = body
+        var data = await User.findOne({
+          user_id: user_id
         })
-        resolve(charges)
+        if (data) {
+          var charge = await stripe.charges.create({
+            card: card_id,
+            customer: user_stripe_id,
+            amount: amount,
+            currency: "INR"
+          })
+        }
+        await Charge.create({
+          user_id: user_id,
+          amount: amount,
+          currency: "INR",
+          date: new Date(),
+          charge_id: charge.id
+        })
+        resolve(charge)
       } catch (error) {
         return reject(error)
       }
@@ -81,6 +115,5 @@ class StripeService {
       }
     })
   }
-
 }
 module.exports = new StripeService()
