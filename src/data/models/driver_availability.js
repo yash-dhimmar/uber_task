@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Trip extends Model {
+  class driver_availability extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,64 +13,33 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Trip.init({
-    trip_id: {
+  driver_availability.init({
+    driver_availibility_id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    tripDate: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
     driver_id: {
       type: DataTypes.INTEGER,
       references: {
         model: {
-          tableName: 'Users',
+          tableName: 'users',
         },
         key: 'user_id',
       },
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: {
-          tableName: 'Users',
-        },
-        key: 'user_id',
-      },
-    },
-    start_latitude: {
-      type: DataTypes.DOUBLE
-    },
-    start_longtitude: {
-      type: DataTypes.DOUBLE
-    },
-    start_point: {
-      type: DataTypes.DOUBLE
-    },
-    end_latitude: {
-      type: DataTypes.DOUBLE
-    },
-    end_longtitude: {
-      type: DataTypes.DOUBLE
-    },
-    end_point: {
-      type: DataTypes.DOUBLE
-    },
-    tripfare: {
-      type: DataTypes.DOUBLE
-    },
-    farecollected: {
-      type: DataTypes.BOOLEAN
+    day: {
+      type: DataTypes.INTEGER
     },
     start_time: {
       type: DataTypes.TIME
     },
     end_time: {
       type: DataTypes.TIME
+    },
+    flag: {
+      type: DataTypes.SMALLINT
     },
     createdAt: {
       allowNull: false,
@@ -79,11 +48,11 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE
-    } 
+    }
   }, {
     sequelize,
-    modelName: 'Trip',
-    tableName: 'trips'
+    modelName: 'Driver_availability',
+    tableName:'driver_availabilities'
   });
-  return Trip;
+  return driver_availability;
 };

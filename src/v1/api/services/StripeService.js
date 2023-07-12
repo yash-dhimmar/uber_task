@@ -4,8 +4,7 @@ const { STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY } = process.env;
 const stripe = require('stripe')(STRIPE_SECRET_KEY)
 
 class StripeService {
-
-  async createcustomer(body, firstName, lastName, email, user_id) {
+  async createcustomer(body,user_id) {
     return new Promise(async (resolve, reject) => {
       try {
         var data = await User.findOne({
@@ -13,13 +12,13 @@ class StripeService {
         })
         if (data) {
           var customer = await stripe.customers.create({
-            name: firstName.concat(lastName),
-            email: email
+            name: data.firstName+ " " + data.lastName,
+            email: data.email
           })
         }
         resolve(customer)
       } catch (error) {
-        return reject(error)
+        return reject(error)     
       }
     })
   }

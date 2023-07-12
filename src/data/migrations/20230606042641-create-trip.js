@@ -10,11 +10,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       tripDate: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false
       },
       driver_id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: 'Users',
@@ -23,7 +23,7 @@ module.exports = {
         },
       },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: 'Users',
@@ -31,35 +31,22 @@ module.exports = {
           key: 'user_id',
         },
       },
-      tripStatus: {
-        type: Sequelize.ENUM('Customer Requested', 'Driver Rejected', 'Driver Accepted', 'Trip Started', 'Trip Completed'),
-        defaultValue: 'Customer Requested'
-      },
-      pickuplocation_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: 'pickuplocations',
-          },
-          key: 'pickuplocation_id',
-        },
-      },
-      pickupdistance: {
+      start_latitude: {
         type: Sequelize.DOUBLE
       },
-      estimatepickuptime: {
+      start_longtitude: {
         type: Sequelize.DOUBLE
       },
-      droplocation_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: 'droplocations',
-          },
-          key: 'droplocation_id',
-        },
+      start_point: {
+        type: Sequelize.DOUBLE
       },
-      estimatedroplocationtime: {
+      end_latitude: {
+        type: Sequelize.DOUBLE
+      },
+      end_longtitude: {
+        type: Sequelize.DOUBLE
+      },
+      end_point: {
         type: Sequelize.DOUBLE
       },
       tripfare: {
@@ -67,6 +54,12 @@ module.exports = {
       },
       farecollected: {
         type: Sequelize.BOOLEAN
+      },
+      start_time: {
+        type: Sequelize.TIME
+      },
+      end_time: {
+        type: Sequelize.TIME
       },
       createdAt: {
         allowNull: false,
